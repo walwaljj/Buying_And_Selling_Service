@@ -1,11 +1,9 @@
 package likelion.market.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.antlr.v4.runtime.misc.NotNull;
 
 @Getter
 @Setter
@@ -14,11 +12,18 @@ public class SalesItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull
     private String title;
+    @NotNull
     private String description;
     private String imageUrl;
-    private int min_price_wanted;
+    @NotNull
+    private int minPriceWanted;
+    @NotNull
     private String status;
+    @NotNull
     private String writer;
+    @NotNull
     private String password;
 }
