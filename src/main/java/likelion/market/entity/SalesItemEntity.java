@@ -1,3 +1,8 @@
+/**
+ * @project MiniProject_Basic_JungSyHyeon
+ * @since 2023-06-29
+ */
+
 package likelion.market.entity;
 
 import jakarta.persistence.*;
@@ -14,16 +19,23 @@ public class SalesItemEntity {
     private Integer id;
 
     @NotNull
+    @Column
     private String title;
     @NotNull
+    @Column
     private String description;
+    @Column
     private String imageUrl;
     @NotNull
+    @Column
     private int minPriceWanted;
     @NotNull
+    @Column
     private String status;
     @NotNull
+    @Column
     private String writer;
     @NotNull
+    @Column
     private String password;
 }
