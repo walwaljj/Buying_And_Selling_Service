@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -49,13 +47,12 @@ public class SalesItemService {
         entity.setPassword(dto.getPassword());
         SalesItemDto.fromEntity(salesItemRepository.save(entity));
 
-        ResponseMessageDto response = new ResponseMessageDto();
-        response.setMessage("등록이 완료되었습니다.");
-        return response;
+        return getResponseMessageDto("등록이 완료되었습니다.");
     }
 
     /**
      * 상품을 전체 조회합니다 (페이징)
+     *
      * @param pageNumber        페이지
      * @param pageSize          담을 게시글 수
      * @return Page<ResponseSalesItemPageDto> 상품 게시글을 담아 Page 형태로 반환
@@ -69,19 +66,13 @@ public class SalesItemService {
 
     /**
      * 상품을 조회합니다.
-     * @param id        게시글 ID
-     * @return SalesItemDto 조회 성공 시 반환
-     * @throws ResponseStatusException  상품 게시글이 존재하지 않을 경우 예외 던짐
-     * @since 2023-06-29
+     *
+     * @param id                게시글 ID
+     * @return SalesItemDto   id 조회 성공 시 Dto로 변환 후 반환
+     * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
-
     public SalesItemDto readSalesItemById(Integer id){
-        Optional<SalesItemEntity> optionalEntity = salesItemRepository.findById(id);
-        if(optionalEntity.isPresent()){
-            return SalesItemDto.fromEntity(optionalEntity.get());
-        }
-        // 게시글 id 가 존재하지 않을 때 예외를 던짐
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return SalesItemDto.fromEntity(checkId(id));
     }
 
     /**
@@ -92,81 +83,44 @@ public class SalesItemService {
      * @param password 비밀번호
      * @return ResponseMessageDto#getMessage() 성공 메세지 반환
      * @throws IllegalAccessException 삭제 권한이 없을 경우 예외 던짐
-     * @throws ResponseStatusException  상품 게시글이 존재하지 않을 경우 예외 던짐
-     * @since 2023-07-01
+     * @throws IOException 상품 이미지 삭제 시 발생 예외 처리 (FileUtils)
+     * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
     public ResponseMessageDto deleteSalesItem(Integer id, String writer, String password ) throws IllegalAccessException, IOException {
 
-        // 게시글 조회
-        Optional<SalesItemEntity> optionalSalesItem = salesItemRepository.findById(id);
-        ResponseMessageDto response = new ResponseMessageDto();
+        // 게시글 조회 및 유저 검증
+        SalesItemEntity entity = checkUser(id, writer, password);
 
-        if(optionalSalesItem.isPresent()){
+        // 등록했던 상품 이미지 삭제
+        FileUtils.deleteDirectory(new File(String.format("item/%d",entity.getId())));
 
-            SalesItemEntity entity = optionalSalesItem.get();
-            log.info("Path = {}",String.format("item/%d",id));
+        // 게시글 삭제
+        salesItemRepository.deleteById(entity.getId());
 
-            if(entity.getWriter().equals(writer) && entity.getPassword().equals(password)){
-                salesItemRepository.deleteById(id);
-
-                // 등록했던 상품 이미지 삭제
-                FileUtils.deleteDirectory(new File(String.format("item/%d",id)));
-                response.setMessage("물품을 삭제했습니다.");
-
-                return response;
-            }else{
-                // 아이디 또는 비밀번호가 일치하지 않을 때
-                throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
-            }
-        }
-        else{
-            // 게시글 id 가 존재하지 않을 때 예외를 던짐
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        return getResponseMessageDto("물품을 삭제했습니다.");
     }
-
 
     /**
      * 상품 정보를 업데이트 합니다.
+     *
      * @param id      게시글 id
      * @param dto     상품 정보
      * @return ResponseMessageDto#getMessage() 성공 메세지 반환
-     * @throws IllegalAccessException 삭제 권한이 없을 경우 예외 던짐
-     * @throws IllegalAccessException 상품 게시글이 존재하지 않을 경우 예외 던짐
-     * @since 2023-06-29
+     * @throws IllegalAccessException 상품 게시글이 없거나 권한이 존재하지 않을 경우 예외 던짐
+     * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
     public ResponseMessageDto updateSalesItem(Integer id, SalesItemDto dto) throws IllegalAccessException {
-        Optional<SalesItemEntity> optionalSalesItem = salesItemRepository.findById(id);
 
-        ResponseMessageDto response = new ResponseMessageDto();
+        // 게시글 조회 및 유저 검증
+        SalesItemEntity entity = checkUser(id, dto.getWriter(), dto.getPassword());
 
-        if(!optionalSalesItem.isPresent()){
-            // 게시글 id 가 존재하지 않을 때 예외를 던짐
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        // update 할 id 존재여부 확인
-        else{
-            SalesItemEntity entity = optionalSalesItem.get();
-            // 아이디 , 비밀번호 확인
-            if(entity.getWriter().equals(dto.getWriter()) &&
-                    entity.getPassword().equals(dto.getPassword()) ){
+        entity.setTitle(dto.getTitle());
+        entity.setDescription(dto.getDescription());
+        entity.setMinPriceWanted(dto.getMinPriceWanted());
+        SalesItemDto.fromEntity(salesItemRepository.save(entity));
 
-                entity.setTitle(dto.getTitle());
-                entity.setDescription(dto.getDescription());
-                entity.setMinPriceWanted(dto.getMinPriceWanted());
-                SalesItemDto.fromEntity(salesItemRepository.save(entity));
-
-                response.setMessage("물품이 수정되었습니다.");
-                return response;
-            }
-            // 아이디 또는 비밀번호가 일치하지 않을 때
-            else{
-                throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
-            }
-
-        }
+        return getResponseMessageDto("물품이 수정되었습니다.");
     }
-
 
     /**
      * 상품 이미지를 업로드합니다
@@ -176,63 +130,79 @@ public class SalesItemService {
      * @param password  비밀번호
      * @param image         상품 이미지
      * @return ResponseMessageDto#getMessage() 성공 메세지 반환
-     * @throws IllegalAccessException 삭제 권한이 없을 경우 예외 던짐
-     * @throws ResponseStatusException 상품 게시글이 존재하지 않을 경우 예외 던짐
-     * @throws IllegalArgumentException 상품 게시글이 존재하지 않을 경우 예외 던짐
-     * @since 2023-07-01
+     * @throws IllegalArgumentException 이미지 파일이 존재하지 않을 경우 예외 던짐
+     * @throws IOException 파일 생성 시 예외 상황
+     * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
     public ResponseMessageDto updateImage(Integer id, String writer, String password ,MultipartFile image) throws IOException, IllegalAccessException {
 
-        // 유저 찾기
-        Optional<SalesItemEntity> optionalSalesItem = salesItemRepository.findById(id);
+        // 게시글 조회 및 유저 검증
+        SalesItemEntity entity = checkUser(id, writer, password);
 
+        // 이미지 파일이 없을 때
         if(image.isEmpty()){
-            // 이미지 파일이 없을 때 예외를 던짐
             throw new IllegalArgumentException("이미지 파일을 첨부해주세요");
         }
 
-        if(!optionalSalesItem.isPresent()){
-            // 게시글 id 가 존재하지 않을 때 예외를 던짐
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }else{
-            SalesItemEntity entity = optionalSalesItem.get();
-            if(entity.getWriter().equals(writer) && entity.getPassword().equals(password)){
+        // id 로 된 폴더 생성
+        Files.createDirectories(Path.of(String.format("item/%d/",entity.getId())));
 
-                // id 로 된 폴더 생성
-                Files.createDirectories(Path.of(String.format("item/%d/",id)));
+        String originalFilename = image.getOriginalFilename();
+        String[] split = originalFilename.split("\\.");
+        String extension = split[split.length - 1];
 
-                // 확장자 분리
-                String originalFilename = image.getOriginalFilename();
-                String[] split = originalFilename.split("\\.");
-                String extension = split[split.length - 1];
+        // 현재 시간을 파일이름으로 저장
+        LocalDateTime now = LocalDateTime.now();
+        Path uploadTo = Path.of(String.format("item/%d/%s.png",id, now.toString().replace(":","")));
+        image.transferTo(uploadTo);
 
-                // 현재 시간을 파일이름으로 저장
-                LocalDateTime now = LocalDateTime.now();
-                Path uploadTo = Path.of(String.format("item/%d/%s.png",id, now.toString().replace(":","")));
-                image.transferTo(uploadTo);
+        //상품에 imageUrl을 저장
+        entity.setImageUrl(String.valueOf(uploadTo));
+        salesItemRepository.save(entity);
 
-                //상품에 imageUrl을 저장
-                entity.setImageUrl(String.valueOf(uploadTo));
-                salesItemRepository.save(entity);
-
-                ResponseMessageDto ResponseMessageDto = new ResponseMessageDto();
-                ResponseMessageDto.setMessage("이미지가 등록되었습니다.");
-                return ResponseMessageDto;
-            }else{
-                throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
-            }
-
-        }
-
-
-
+        return getResponseMessageDto("이미지가 등록되었습니다.");
     }
 
+    /**
+     * 작성자 일치 여부를 확인합니다.
+     *
+     * @param id        게시글 id
+     * @param writer    게시글 작성자
+     * @param password  비밀번호
+     * @return          입력받은 writer 와 password 를 게시글 id와 비교 후 일치 한다면 salesItemEntity 를 반환
+     * @throws IllegalAccessException   검증 실패 시 반환
+     */
+    public SalesItemEntity checkUser(Integer id, String writer, String password) throws IllegalAccessException {
+        SalesItemEntity salesItemEntity = checkId(id);
+        if( !salesItemEntity.getWriter().equals(writer) || !salesItemEntity.getPassword().equals(password)){
+            throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
+        }
+        return salesItemEntity;
+    }
 
+    /**
+     * 게시글 존재 여부를 확인합니다.
+     *
+     * @param id    게시글 id
+     * @return      게시글이 존재한다면 SalesItemEntity 반환
+     */
+    public SalesItemEntity checkId(Integer id){
+        Optional<SalesItemEntity> optionalSalesItem = salesItemRepository.findById(id);
+        if(!optionalSalesItem.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return optionalSalesItem.get();
+    }
 
-
-
-
-
-
+    /**
+     * 결과에 대한 응답 메세지를 반환합니다.
+     *
+     * @param msg
+     * @return ResponseMessageDto
+     */
+    private ResponseMessageDto getResponseMessageDto(String msg) {
+        ResponseMessageDto response = new ResponseMessageDto();
+        response.setMessage(msg);
+        return response;
+    }
 }
