@@ -1,6 +1,7 @@
 package likelion.market.service;
 
 import likelion.market.dto.ResponseMessageDto;
+import likelion.market.dto.ResponseSalesItemPageDto;
 import likelion.market.dto.SalesItemDto;
 import likelion.market.entity.SalesItemEntity;
 import likelion.market.repository.SalesItemRepository;
@@ -57,20 +58,13 @@ public class SalesItemService {
      * 상품을 전체 조회합니다 (페이징)
      * @param pageNumber        페이지
      * @param pageSize          담을 게시글 수
-     * @return List<SalesItemDto> 상품 게시글을 담아 List 형태로 반환
-     * @since 2023-06-29
+     * @return Page<ResponseSalesItemPageDto> 상품 게시글을 담아 Page 형태로 반환
+     * @since 2023-07-02 페이징 처리 및 imageUrl == null 이라면 표출되지 않게 수정완료
      */
-    public List<SalesItemDto> readSalesItemAll(int pageNumber, int pageSize){
-        //TODO Page 타입 반환하도록 수정하기
+    public Page<ResponseSalesItemPageDto> readSalesItemAll(int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<SalesItemEntity> entityAll = salesItemRepository.findAll(pageable);
-        List<SalesItemDto> dtoAll = new ArrayList<>();
-        if(!entityAll.isEmpty()) {
-            for (SalesItemEntity entity : entityAll) {
-                dtoAll.add(SalesItemDto.fromEntity(entity));
-            }
-        }
-        return dtoAll;
+        return entityAll.map(ResponseSalesItemPageDto::fromEntity);
     }
 
     /**

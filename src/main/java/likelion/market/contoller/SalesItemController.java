@@ -6,16 +6,17 @@ package likelion.market.contoller;
 
 
 import likelion.market.dto.ResponseMessageDto;
+import likelion.market.dto.ResponseSalesItemPageDto;
 import likelion.market.dto.SalesItemDto;
 import likelion.market.service.SalesItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,11 +37,11 @@ public class SalesItemController {
 
     /**
      * 상품 전체 조회
-     * @since 2023-06-29
+     * @since 2023-07-02 반환 타입을 Page 로 변경
      */
     @GetMapping()
-    public List<SalesItemDto> readSaleItemAll(@RequestParam (value = "page", defaultValue = "0") int pageNumber,
-                                              @RequestParam (value = "limit", defaultValue = "25") int pageSize){
+    public Page<ResponseSalesItemPageDto> readSaleItemAll(@RequestParam (value = "page", defaultValue = "0") int pageNumber,
+                                                          @RequestParam (value = "limit", defaultValue = "25") int pageSize){
         return salesItemService.readSalesItemAll(pageNumber,pageSize);
     }
 
