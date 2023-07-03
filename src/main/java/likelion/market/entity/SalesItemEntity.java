@@ -1,6 +1,6 @@
 /**
  * @project MiniProject_Basic_JungSyHyeon
- * @since 2023-06-29
+ * @since 2023-07-03 연관관계 수정
  */
 
 package likelion.market.entity;
