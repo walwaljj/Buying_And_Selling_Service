@@ -3,7 +3,9 @@ package likelion.market.service;
 import likelion.market.dto.ResponseMessageDto;
 import likelion.market.dto.ResponseSalesItemPageDto;
 import likelion.market.dto.SalesItemDto;
+import likelion.market.entity.CommentEntity;
 import likelion.market.entity.SalesItemEntity;
+import likelion.market.repository.CommentRepository;
 import likelion.market.repository.SalesItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SalesItemService {
     private final SalesItemRepository salesItemRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * 상품을 등록합니다.
@@ -93,6 +97,12 @@ public class SalesItemService {
 
         // 등록했던 상품 이미지 삭제
         FileUtils.deleteDirectory(new File(String.format("item/%d",entity.getId())));
+
+        // 상품 답글 삭제
+        List<CommentEntity> comment = entity.getComment();
+        for (CommentEntity commentEntity : comment) {
+            commentRepository.delete(commentEntity);
+        }
 
         // 게시글 삭제
         salesItemRepository.deleteById(entity.getId());
