@@ -1,12 +1,13 @@
 package likelion.market.dto;
 
 import likelion.market.entity.CommentEntity;
+import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
 @Data
 public class CommentDto {
     private Integer id;
-    private Integer ItemId; // sales_item id
+    private SalesItemEntity itemId; // sales_item id
     private String writer;
     private String password;
     private String content;
