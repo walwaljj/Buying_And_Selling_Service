@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -19,23 +21,21 @@ public class SalesItemEntity {
     private Integer id;
 
     @NotNull
-    @Column
     private String title;
     @NotNull
-    @Column
     private String description;
-    @Column
+    @Column(name = "image_url")
     private String imageUrl;
     @NotNull
-    @Column
+    @Column(name = "min_price_wanted")
     private int minPriceWanted;
     @NotNull
-    @Column
     private String status;
     @NotNull
-    @Column
     private String writer;
     @NotNull
-    @Column
     private String password;
+    @OneToMany(mappedBy = "itemId")
+    private List<CommentEntity> comment;
+
 }
