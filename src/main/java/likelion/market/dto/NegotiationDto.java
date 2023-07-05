@@ -1,26 +1,21 @@
+/**
+ * @project MiniProject_Basic_JungSyHyeon
+ * @since 2023-07-04
+ */
+
 package likelion.market.dto;
 
-import likelion.market.entity.NegotiationEntity;
+import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
 @Data
 public class NegotiationDto {
 
     private Integer id;
-    private Integer ItemId; // sales_item id
-    private int suggested_price;
+    private SalesItemEntity itemId; // sales_item id
+    private Integer suggestedPrice;
     private String status;
     private String writer;
     private String password;
 
-    public static NegotiationDto fromEntity(NegotiationEntity entity){
-        NegotiationDto dto = new NegotiationDto();
-        dto.setId(entity.getId());
-        dto.setItemId(entity.getItemId());
-        dto.setSuggested_price(entity.getSuggested_price());
-        dto.setStatus(entity.getStatus());
-        dto.setWriter(entity.getWriter());
-        dto.setPassword(entity.getPassword());
-        return dto;
-    }
 }
