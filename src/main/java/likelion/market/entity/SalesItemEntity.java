@@ -1,10 +1,11 @@
 /**
  * @project MiniProject_Basic_JungSyHyeon
- * @since 2023-07-03 연관관계 수정
+ * @since 2023-07-04 연관관계 수정
  */
 
 package likelion.market.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +36,10 @@ public class SalesItemEntity {
     private String writer;
     @NotNull
     private String password;
-    @OneToMany(mappedBy = "itemId")
+    @OneToMany(mappedBy = "itemId", fetch = FetchType.LAZY)
     private List<CommentEntity> comment;
+    @OneToMany(mappedBy = "itemId", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<NegotiationEntity> negotiation;
 
 }
