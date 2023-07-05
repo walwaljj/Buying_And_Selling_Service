@@ -1,3 +1,8 @@
+/**
+ * @project MiniProject_Basic_JungSyHyeon
+ * @since 2023-07-04
+ */
+
 package likelion.market.repository;
 
 import likelion.market.entity.NegotiationEntity;
