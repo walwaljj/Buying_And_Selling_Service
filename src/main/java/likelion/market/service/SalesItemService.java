@@ -4,8 +4,10 @@ import likelion.market.dto.ResponseMessageDto;
 import likelion.market.dto.ResponseSalesItemPageDto;
 import likelion.market.dto.SalesItemDto;
 import likelion.market.entity.CommentEntity;
+import likelion.market.entity.NegotiationEntity;
 import likelion.market.entity.SalesItemEntity;
 import likelion.market.repository.CommentRepository;
+import likelion.market.repository.NegotiationRepository;
 import likelion.market.repository.SalesItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ import java.util.Optional;
 public class SalesItemService {
     private final SalesItemRepository salesItemRepository;
     private final CommentRepository commentRepository;
+    private final NegotiationRepository negotiationRepository;
 
     /**
      * 상품을 등록합니다.
@@ -102,6 +105,12 @@ public class SalesItemService {
         List<CommentEntity> comment = entity.getComment();
         for (CommentEntity commentEntity : comment) {
             commentRepository.delete(commentEntity);
+        }
+
+        // 구매 제안 삭제
+        List<NegotiationEntity> nego = entity.getNegotiation();
+        for (NegotiationEntity negotiationEntity : nego) {
+            negotiationRepository.delete(negotiationEntity);
         }
 
         // 게시글 삭제
