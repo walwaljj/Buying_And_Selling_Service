@@ -126,7 +126,7 @@ public class CommentService {
      */
     public ResponseMessageDto deleteComment(Integer itemId, Integer commentId, CommentDto dto) throws IllegalAccessException {
         CommentEntity commententity = checkUser(itemId, commentId, dto.getWriter(), dto.getPassword());
-        commentRepository.deleteById(commentId);
+        commentRepository.deleteById(commententity.getId());
         return getResponseMessageDto("댓글을 삭제했습니다.");
     }
 
