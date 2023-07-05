@@ -9,10 +9,19 @@
 
 <br> <br>
 ## 🔨 API 모아보기 🔨
-* * *
+<details>
+<summary> (참고) API 확인 시 토글을 누르고 상황에 따른 요청과 응답을 확인해 보세요 ! </summary>
+<div markdown="1">
+<img width="589" alt="image" src="https://github.com/likelion-backend-5th/MiniProject_Basic_JungSuHyeon/assets/108582847/7e5907be-5381-42ce-bcec-3154711ecafc">
+ </div>
+</details>
+
 [  1️⃣  API 바로 가기  ](https://documenter.getpostman.com/view/26726157/2s93zE4LU4) <br> <br>
-[2️⃣ API 바로 가기  ](https://documenter.getpostman.com/view/26726157/2s93zE4LU7)<br> <br>
+[ 2️⃣ API 바로 가기  ](https://documenter.getpostman.com/view/26726157/2s93zE4LU7)<br> <br>
 [  3️⃣ API 바로 가기  ](https://documenter.getpostman.com/view/26726157/2s93zE4LYP)<br> <br>
+
+
+
 
 ## ✨ 요구사항 설명 ✨
 
@@ -216,6 +225,13 @@
 
 ### 🗓️ 프로젝트 기간 🗓️
 ### 2023 . 06 . 29 ~ 2023 . 07 . 04
+* * *
+
+### 🪄 개발 스택 🪄
+> Language : Java 17 <br>
+> Framwork : SpringBoot 3.1.1<br>
+> Database : SQLite<br>
+> Tool : IntelliJ IDEA, Postman<br>
 
 * * *
 ### 💻 developer 💻
