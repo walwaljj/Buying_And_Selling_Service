@@ -181,13 +181,14 @@ public class CommentService {
 
     /**
      * 작성자 일치 여부를 확인합니다.
+     *
      * @param itemId           게시글 id
      * @param commentId        답글 id
      * @param writer    답글 작성자
      * @param password  비밀번호
-     * @return          입력받은 writer 와 password 를 게시글 id와 비교 후 일치 한다면 salesItemEntity 를 반환
+     * @return  CommentEntity        입력받은 writer 와 password 를 게시글 id와 비교 후 일치 한다면 salesItemEntity 를 반환
      * @throws IllegalAccessException   검증 실패 시 반환
-     * @since 2023-07-03
+     * @since 2023-07-04 수정
      */
     public CommentEntity checkUser(Integer itemId, Integer commentId, String writer, String password) throws IllegalAccessException {
         CommentEntity commentEntity = checkCommentId(itemId, commentId);
