@@ -24,6 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 import java.util.List;
 
+/**
+ * CommentService class
+ */
 @Service @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -43,7 +46,7 @@ public class CommentService {
         entity.setWriter(dto.getWriter());
         entity.setPassword(dto.getPassword());
         entity.setContent(dto.getContent());
-        CommentDto.fromEntity(commentRepository.save(entity));
+        commentRepository.save(entity);
 
         return getResponseMessageDto("댓글이 등록되었습니다.");
     }
@@ -54,7 +57,7 @@ public class CommentService {
      * @param itemId    게시글 Id
      * @param pageNumber    페이지
      * @param pageSize      담을 게시글 수
-     * @return  Page<ResponseSalesItemPageDto> 상품 게시글 id에 맞는 댓글을 Page 형태로 반환
+     * @return  Page 상품 게시글 id에 맞는 댓글을 페이지타입으로 반환
      * @since 2023-07-03
      */
     public Page<ResponseCommentPageDto> readCommentAll(Integer itemId, int pageNumber, int pageSize) {

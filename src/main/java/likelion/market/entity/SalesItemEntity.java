@@ -13,6 +13,9 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
+/**
+ * SalesItemEntity class
+ */
 @Getter
 @Setter
 @Entity

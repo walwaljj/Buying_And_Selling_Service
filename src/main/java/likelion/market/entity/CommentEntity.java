@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * CommentEntity class
+ */
 @Getter
 @Setter
 @Entity

@@ -24,7 +24,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-
+/** NegotiationService class
+ *
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class NegotiationService {
         negotiationEntity.setWriter(dto.getWriter());
         negotiationEntity.setPassword(dto.getPassword());
         negotiationEntity.setSuggestedPrice(dto.getSuggestedPrice());
+        negotiationEntity.setStatus("제안");
 
         negotiationRepository.save(negotiationEntity);
         return getResponseMessageDto( "구매 제안이 등록되었습니다.");
@@ -56,7 +59,7 @@ public class NegotiationService {
      * @param writer    작성자 (구매 제한자 또는 게시글 작성자)
      * @param password  비밀번호
      * @param pageNumber    페이지
-     * @return  Page<ResponseNegotiationPageDto> 작성자에 따라 보여줄 내용을 구분하고 , Page에 담아 반환
+     * @return  Page  작성자에 따라 보여줄 내용을 구분하고 , 페이지타입으로 반환
      * @throws IllegalAccessException id, password 검증 실패 시 반환
      * @since 2023-07-04
      */

@@ -8,6 +8,9 @@ package likelion.market.dto;
 import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
+/**
+ * NegotiationDto class
+ */
 @Data
 public class NegotiationDto {
 

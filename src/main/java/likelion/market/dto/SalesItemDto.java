@@ -4,10 +4,15 @@
  */
 package likelion.market.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
+/**
+ * SalesItemDto class
+ */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SalesItemDto {
 
     private Integer id;
@@ -16,16 +21,19 @@ public class SalesItemDto {
     private int minPriceWanted;
     private String writer;
     private String password;
+    private String status;
 
-
+    /**필요한 정보만 dto 로 변환
+     *
+     * @param entity
+     * @return  SalesItemEntity -> SalesItemDto
+     */
     public static SalesItemDto fromEntity(SalesItemEntity entity){
         SalesItemDto dto = new SalesItemDto();
-        dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
-        dto.setDescription(entity.getDescription());
         dto.setMinPriceWanted(entity.getMinPriceWanted());
-        dto.setWriter(entity.getWriter());
-        dto.setPassword(entity.getPassword());
+        dto.setDescription(entity.getDescription());
+        dto.setStatus(entity.getStatus());
         return dto;
     }
 }

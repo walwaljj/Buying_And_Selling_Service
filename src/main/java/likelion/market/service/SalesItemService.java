@@ -28,6 +28,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SalesItemService class
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,7 +55,7 @@ public class SalesItemService {
         entity.setStatus("판매중");
         entity.setWriter(dto.getWriter());
         entity.setPassword(dto.getPassword());
-        SalesItemDto.fromEntity(salesItemRepository.save(entity));
+        salesItemRepository.save(entity);
 
         return getResponseMessageDto("등록이 완료되었습니다.");
     }
@@ -62,7 +65,7 @@ public class SalesItemService {
      *
      * @param pageNumber        페이지
      * @param pageSize          담을 게시글 수
-     * @return Page<ResponseSalesItemPageDto> 상품 게시글을 담아 Page 형태로 반환
+     * @return Page              상품 게시글을 페이지 타입으로 반환
      * @since 2023-07-02 페이징 처리 및 imageUrl == null 이라면 표출되지 않게 수정완료
      */
     public Page<ResponseSalesItemPageDto> readSalesItemAll(int pageNumber, int pageSize){
@@ -136,21 +139,21 @@ public class SalesItemService {
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setMinPriceWanted(dto.getMinPriceWanted());
-        SalesItemDto.fromEntity(salesItemRepository.save(entity));
+        salesItemRepository.save(entity);
 
         return getResponseMessageDto("물품이 수정되었습니다.");
     }
 
+
     /**
      * 상품 이미지를 업로드합니다
-     *
      * @param id        게시글 id
      * @param writer    게시글 작성자
      * @param password  비밀번호
-     * @param image         상품 이미지
-     * @return ResponseMessageDto#getMessage() 성공 메세지 반환
-     * @throws IllegalArgumentException 이미지 파일이 존재하지 않을 경우 예외 던짐
-     * @throws IOException 파일 생성 시 예외 상황
+     * @param image      상품 이미지
+     * @return  ResponseMessageDto              결과 메세지 반환
+     * @throws IOException                      이미지 파일 및 폴더 생성 시 예외
+     * @throws IllegalAccessException           이미지 파일이 존재하지 않을 경우 예외 던짐
      * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
     public ResponseMessageDto updateImage(Integer id, String writer, String password ,MultipartFile image) throws IOException, IllegalAccessException {

@@ -9,6 +9,9 @@ import likelion.market.entity.CommentEntity;
 import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
+/**
+ * CommentDto class
+ */
 @Data
 public class CommentDto {
     private Integer id;
@@ -18,6 +21,11 @@ public class CommentDto {
     private String content;
     private String reply;
 
+    /** 필요한 정보만 dto로 변환
+     *
+     * @param entity        Comment 정보
+     * @return CommentEntity -> CommentDto 변환
+     */
     public static CommentDto fromEntity(CommentEntity entity){
         CommentDto dto = new CommentDto();
         dto.setId(entity.getId());

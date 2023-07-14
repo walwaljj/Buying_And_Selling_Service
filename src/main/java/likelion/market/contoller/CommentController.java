@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * CommentController class
+ */
 
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -20,8 +23,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    /**
-     * 게시글에 댓글 등록
+
+    /**게시글에 댓글 등록
+     *
+     * @param itemId        게시글 Id
+     * @param dto           요청 정보
+     * @return  ResponseMessageDto 결과를 메세지로 반환
      * @since 2023-07-03
      */
     @PostMapping("/{itemId}/comments")
@@ -30,8 +37,13 @@ public class CommentController {
         return commentService.createComment(itemId, dto);
     }
 
+
     /**
      * 게시글 id에 해당하는 댓글 전체 조회
+     * @param itemId        게시글 Id
+     * @param pageNumber    페이지 번호
+     * @param pageSize      한 페이지에 담을 댓글 수
+     * @return Page         결과를 페이지타입으로 반환
      * @since 2023-07-03
      */
     @GetMapping("/{itemId}/comments")
@@ -41,8 +53,14 @@ public class CommentController {
         return commentService.readCommentAll(itemId,pageNumber,pageSize);
     }
 
+
     /**
      * 게시글 id에 해당하는 댓글 업데이트
+     * @param itemId        게시글 Id
+     * @param commentId     댓글 Id
+     * @param dto           요청 정보
+     * @return  ResponseMessageDto      결과를 메세지로 반환
+     * @throws IllegalAccessException   인증 실패시 예외
      * @since 2023-07-03
      */
     @PutMapping("/{itemId}/comments/{commentId}")
@@ -51,8 +69,14 @@ public class CommentController {
         return commentService.updateComment(itemId, commentId, dto);
     }
 
+
     /**
      * 게시글 id에 해당하는 댓글의 답변 업데이트
+     * @param itemId        게시글 Id
+     * @param commentId     댓글 Id
+     * @param dto           요청 정보
+     * @return  ResponseMessageDto      결과를 메세지로 반환
+     * @throws IllegalAccessException   인증 실패시 예외
      * @since 2023-07-03
      */
     @PutMapping("/{itemId}/comments/{commentId}/reply")
@@ -61,8 +85,14 @@ public class CommentController {
         return commentService.updateReply(itemId, commentId, dto);
     }
 
-    /**
-     * 댓글 삭제
+
+    /** 댓글 삭제
+     *
+     * @param itemId        게시글 Id
+     * @param commentId     댓글 Id
+     * @param dto           요청 정보
+     * @return  ResponseMessageDto      결과를 메세지로 반환
+     * @throws IllegalAccessException   인증 실패시 예외
      * @since 2023-07-03
      */
     @DeleteMapping("/{itemId}/comments/{commentId}")

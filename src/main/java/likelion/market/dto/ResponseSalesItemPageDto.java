@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion.market.entity.SalesItemEntity;
 import lombok.Data;
 
+/**
+ * ResponseSalesItemPageDto class 조회 페이지에 보여줄 정보
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseSalesItemPageDto {
@@ -19,6 +22,11 @@ public class ResponseSalesItemPageDto {
     private String imageUrl;
     private String status;
 
+    /**필요한 정보를 dto 형태로 변환해 반환
+     *
+     * @param entity        SalesItem 정보
+     * @return  SalesItemEntity -> ResponseSalesItemPageDto
+     */
     public static ResponseSalesItemPageDto fromEntity(SalesItemEntity entity){
             ResponseSalesItemPageDto pageDto = new ResponseSalesItemPageDto();
             pageDto.setId(entity.getId());
