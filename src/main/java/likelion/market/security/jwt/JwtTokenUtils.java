@@ -19,15 +19,15 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils {
 
-    private final Key key;
+    private final Key singleKey;
     private final JwtParser parser;
 
     public JwtTokenUtils(
             @Value("${jwt.secret}") String jwtSecret
     ) {
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        this.singleKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         this.parser = Jwts.parserBuilder()
-                .setSigningKey(this.key)
+                .setSigningKey(this.singleKey)
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class JwtTokenUtils {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(key)
+                .signWith(singleKey)
                 .compact();
     }
 

@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.market.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -34,16 +37,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 String username = jwtTokenUtils.parseClaims(token).getSubject();
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         CustomUserDetails.builder().username((username)).build(), token, new ArrayList<>());
 
-                context.setAuthentication(usernamePasswordAuthenticationToken);
+                context.setAuthentication(authenticationToken);
 
                 SecurityContextHolder.setContext(context);
+            }            else {
+                log.warn("jwt validation failed");
             }
 
-            filterChain.doFilter(request, response);
 
         }
+        filterChain.doFilter(request, response);
     }
 }
