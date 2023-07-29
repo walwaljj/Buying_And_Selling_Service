@@ -44,5 +44,7 @@ public class SalesItemEntity {
     @OneToMany(mappedBy = "itemId", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<NegotiationEntity> negotiation;
+    @OneToOne
+    private UserEntity user;
 
 }

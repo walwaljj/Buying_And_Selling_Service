@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,4 +28,11 @@ public class UserEntity {
     private String email;
     @Column(unique = true)
     private String phoneNumber;
+
+    @OneToMany
+    private List<SalesItemEntity> salesItem;
+    @OneToMany
+    private List<NegotiationEntity> negotiation;
+    @OneToMany
+    private List<CommentEntity> comment;
 }

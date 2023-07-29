@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.List;
+
 /**
  * NegotiationEntity class
  */
@@ -34,4 +36,7 @@ public class NegotiationEntity {
     private String writer;
     @NotNull
     private String password;
+
+    @ManyToMany
+    private List<UserEntity> user;
 }

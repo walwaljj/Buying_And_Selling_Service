@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * CommentEntity class
  */
@@ -21,4 +23,7 @@ public class CommentEntity {
     private String password;
     private String content;
     private String reply;
+
+    @ManyToMany
+    private List<UserEntity> user;
 }
