@@ -7,6 +7,7 @@ package likelion.market.dto;
 
 import likelion.market.entity.CommentEntity;
 import likelion.market.entity.SalesItemEntity;
+import likelion.market.entity.UserEntity;
 import lombok.Data;
 
 /**
@@ -20,6 +21,8 @@ public class CommentDto {
     private String password;
     private String content;
     private String reply;
+
+    private UserEntity user;
 
     /** 필요한 정보만 dto로 변환
      *

@@ -6,6 +6,7 @@ package likelion.market.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion.market.entity.SalesItemEntity;
+import likelion.market.entity.UserEntity;
 import lombok.Data;
 
 /**
@@ -21,6 +22,8 @@ public class SalesItemDto {
     private int minPriceWanted;
     private String writer;
     private String password;
+
+    private UserEntity user;
     private String status;
 
     /**필요한 정보만 dto 로 변환
