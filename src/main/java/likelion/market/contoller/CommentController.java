@@ -7,7 +7,9 @@ package likelion.market.contoller;
 import likelion.market.dto.CommentDto;
 import likelion.market.dto.ResponseCommentPageDto;
 import likelion.market.dto.ResponseMessageDto;
+import likelion.market.security.CustomUserDetailsManager;
 import likelion.market.service.CommentService;
+import likelion.market.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,9 @@ public class CommentController {
     private final CommentService commentService;
 
 
+
     /**게시글에 댓글 등록
-     *
+     *u
      * @param itemId        게시글 Id
      * @param dto           요청 정보
      * @return  ResponseMessageDto 결과를 메세지로 반환

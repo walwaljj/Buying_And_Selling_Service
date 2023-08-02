@@ -1,45 +1,51 @@
 package likelion.market.security.jwt;
 
-import likelion.market.dto.ResponseMessageDto;
-import likelion.market.dto.UserDto;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import likelion.market.security.CustomUserDetails;
 import likelion.market.security.CustomUserDetailsManager;
 import likelion.market.security.config.PasswordEncoderConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  *  token Controller class
  */
 @RequiredArgsConstructor
+//@Controller
 @RestController
-@RequestMapping("token")
+@Slf4j
+@RequestMapping("/token")
 public class JwtController {
 
     private final CustomUserDetailsManager manager;
     private final PasswordEncoderConfig passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
 
+
+
     /** 토큰을 생성 합니다.
      *
-     * @param dto user 정보
+     * @param session
      * @return token 정보를 반환
      */
-    @PostMapping("/issue")
-    public JwtTokenDto issueJwt(@RequestParam UserDto dto){
+    @GetMapping("/issue")
+    public String issueJwt(HttpSession session, HttpServletResponse response){
 
-        UserDetails userByUsername = manager.loadUserByUsername(dto.getUsername());
-
-        // 비밀번호 일치 하지 않을 경우
-        if(!passwordEncoder.passwordEncoder().matches(dto.getPassword(), userByUsername.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        CustomUserDetails user = (CustomUserDetails) session.getAttribute("user");
 
         // 토큰 생성
-        JwtTokenDto tokenDto = new JwtTokenDto();
-        tokenDto.setToken(jwtTokenUtils.generateToken(userByUsername));
-        return tokenDto;
+        JwtTokenDto jwtToken = new JwtTokenDto();
+        jwtToken.setToken(jwtTokenUtils.generateToken(user));
+
+        log.info("tokenDto = {} ",jwtToken.getToken());
+
+        return jwtToken.getToken();
+//        return "redirect:/home/users";
+
     }
 }

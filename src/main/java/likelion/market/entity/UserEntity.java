@@ -1,10 +1,8 @@
 package likelion.market.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import likelion.market.enums.Role;
+import lombok.*;
 
 import java.util.List;
 
@@ -19,7 +17,6 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
@@ -29,6 +26,9 @@ public class UserEntity {
     @Column(unique = true)
     private String phoneNumber;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @OneToMany
     private List<SalesItemEntity> salesItem;
     @OneToMany

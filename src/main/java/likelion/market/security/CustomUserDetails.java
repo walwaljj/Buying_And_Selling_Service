@@ -11,7 +11,7 @@ import java.util.Collection;
 
 @Getter
 @Builder
-public class CustomUserDetails implements UserDetails {
+public class        CustomUserDetails implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

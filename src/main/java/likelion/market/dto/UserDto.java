@@ -19,12 +19,13 @@ public class UserDto {
     private Integer id;
     private String username;
     private String password;
+    private String passwordChk;
     private String email;
     private String phoneNumber;
 
-//    private List<SalesItemEntity> salesItem;
-//    private List<NegotiationEntity> negotiation;
-//    private List<CommentEntity> comment;
+    private List<SalesItemEntity> salesItem;
+    private List<NegotiationEntity> negotiation;
+    private List<CommentEntity> comment;
     public static UserDto fromUserEntity(UserEntity user) {
         return UserDto.builder()
                 .id(user.getId())

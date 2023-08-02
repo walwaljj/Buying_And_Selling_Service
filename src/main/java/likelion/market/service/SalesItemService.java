@@ -6,9 +6,13 @@ import likelion.market.dto.SalesItemDto;
 import likelion.market.entity.CommentEntity;
 import likelion.market.entity.NegotiationEntity;
 import likelion.market.entity.SalesItemEntity;
+import likelion.market.entity.UserEntity;
+import likelion.market.enums.Role;
 import likelion.market.repository.CommentRepository;
 import likelion.market.repository.NegotiationRepository;
 import likelion.market.repository.SalesItemRepository;
+import likelion.market.repository.UserRepository;
+import likelion.market.security.config.PasswordEncoderConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,23 +43,41 @@ public class SalesItemService {
     private final SalesItemRepository salesItemRepository;
     private final CommentRepository commentRepository;
     private final NegotiationRepository negotiationRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoderConfig passwordEncoderConfig;
 
     /**
      * 상품을 등록합니다.
      *
      * @param dto   상품 정보
      * @return ResponseMessageDto#getMessage() 성공 메세지 반환
-     * @since 2023-06-29
+     * @since 2023-08-02
      */
     public ResponseMessageDto createSalesItem(SalesItemDto dto){
 
         SalesItemEntity entity = new SalesItemEntity();
+
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setMinPriceWanted(dto.getMinPriceWanted());
         entity.setStatus("판매중");
-        entity.setWriter(dto.getWriter());
-        entity.setPassword(dto.getPassword());
+//        entity.setWriter(dto.getWriter()); // legacy
+//        entity.setPassword(dto.getPassword()); // legacy
+
+        Optional<UserEntity> byUsername = userRepository.findByUsername(dto.getWriter());
+        if(byUsername.isPresent()){
+            UserEntity user = byUsername.get();
+            if(passwordEncoderConfig.passwordEncoder().matches(dto.getPassword(),user.getPassword())){
+                // 유저 등록
+                entity.setUser(user);
+            }
+            else{
+                throw new IllegalArgumentException( " 비밀번호를 확인해주세요.");
+            }
+        }else {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
         salesItemRepository.save(entity);
 
         return getResponseMessageDto("등록이 완료되었습니다.");
@@ -156,6 +179,7 @@ public class SalesItemService {
      * @throws IllegalAccessException           이미지 파일이 존재하지 않을 경우 예외 던짐
      * @since 2023-07-02 검증 메소드 분리로 인한 수정
      */
+//    public ResponseMessageDto updateImage(Integer id, String writer, String password ,MultipartFile image) throws IOException, IllegalAccessException {
     public ResponseMessageDto updateImage(Integer id, String writer, String password ,MultipartFile image) throws IOException, IllegalAccessException {
 
         // 게시글 조회 및 유저 검증
@@ -195,8 +219,16 @@ public class SalesItemService {
      * @throws IllegalAccessException   검증 실패 시 반환
      */
     public SalesItemEntity checkUser(Integer id, String writer, String password) throws IllegalAccessException {
+
         SalesItemEntity salesItemEntity = checkId(id);
-        if( !salesItemEntity.getWriter().equals(writer) || !salesItemEntity.getPassword().equals(password)){
+
+
+//        if( !salesItemEntity.getWriter().equals(writer) || !salesItemEntity.getPassword().equals(password)){
+//            throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
+//        }
+
+        if( !salesItemEntity.getUser().getUsername().equals(writer) ||
+                ! passwordEncoderConfig.passwordEncoder().matches(password,salesItemEntity.getUser().getPassword())){
             throw new IllegalAccessException("허용되지 않는 접근자 입니다.");
         }
         return salesItemEntity;

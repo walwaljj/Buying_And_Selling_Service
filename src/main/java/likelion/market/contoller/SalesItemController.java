@@ -4,11 +4,13 @@
 
 package likelion.market.contoller;
 
-
+import org.springframework.security.core.Authentication;
 import likelion.market.dto.ResponseMessageDto;
 import likelion.market.dto.ResponseSalesItemPageDto;
 import likelion.market.dto.SalesItemDto;
+import likelion.market.security.CustomUserDetailsManager;
 import likelion.market.service.SalesItemService;
+import likelion.market.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,8 @@ import java.io.IOException;
 public class SalesItemController {
 
     private final SalesItemService salesItemService;
+    private final CustomUserDetailsManager manager;
+    private final UserService userService;
 
 
     /**
@@ -38,6 +42,7 @@ public class SalesItemController {
      */
     @PostMapping
     public ResponseMessageDto createSaleItem(@RequestBody SalesItemDto dto){
+
         return salesItemService.createSalesItem(dto);
     }
 
@@ -96,10 +101,12 @@ public class SalesItemController {
      */
     @PutMapping(value = "/{id}/image" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseMessageDto updateSaleItemImage(@PathVariable Integer id,
+//                                                  @RequestBody SalesItemDto dto,
                                            String writer, String password,
                                            @RequestBody MultipartFile image) throws IOException, IllegalAccessException {
 
         return salesItemService.updateImage(id, writer, password , image);
+//        return salesItemService.updateImage(id, dto , image);
     }
 
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+</head>
+<body>
+
+    <form action="/home/users" method="GET">
+        <p th:text="${username}">hi 드디어 여기로 왔구나.. 수고했다 수현아ㅠㅠ</p>
+        <button type="button"
+                th:onclick="|location.href='@{http://localhost:8080/logout}'|" >로그 아웃</button>
+    </form>
+</body>
+</html>

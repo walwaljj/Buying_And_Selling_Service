@@ -19,8 +19,6 @@ import java.util.Optional;
 public class CustomUserDetailsManager implements UserDetailsManager {
 
     private final UserRepository userRepository;
-    private final PasswordEncoderConfig passwordEncoder;
-
     @Override
     public void createUser(UserDetails userDetails) {
 //        CustomUserDetails userDto = (CustomUserDetails)  userDetails;

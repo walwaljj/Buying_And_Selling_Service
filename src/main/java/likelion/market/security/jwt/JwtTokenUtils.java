@@ -69,4 +69,10 @@ public class JwtTokenUtils {
     public Claims parseClaims(String token) {
         return parser.parseClaimsJws(token).getBody();
     }
+
+    public boolean isExpired(String token) {
+        Date expiredDate = parseClaims(token).getExpiration();
+        // Token의 만료 날짜가 지금보다 이전인지 check
+        return expiredDate.before(new Date());
+    }
 }

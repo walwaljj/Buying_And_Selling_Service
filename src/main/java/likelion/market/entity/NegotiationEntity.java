@@ -37,6 +37,6 @@ public class NegotiationEntity {
     @NotNull
     private String password;
 
-    @ManyToMany
-    private List<UserEntity> user;
+    @ManyToOne
+    private UserEntity user;
 }
